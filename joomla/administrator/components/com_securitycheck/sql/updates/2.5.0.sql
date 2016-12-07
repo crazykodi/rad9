@@ -1,1 +1,0 @@
-ALTER TABLE `#__securitycheck_logs` MODIFY `original_string` VARCHAR(700);
