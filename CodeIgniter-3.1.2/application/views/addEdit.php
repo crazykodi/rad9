@@ -27,7 +27,7 @@ function createForm($txtName = '', $txtDescription = '', $txtPrice = '', $id = '
 				</h2>
 			</div>	
 			<div class="w3-container" id="form">
-				<form class="w3-container w3-card-4 w3-half w3-light-grey" method="post" action="<?php echo site_url('Welcome'); echo ($id == '' ? '/insertRecord' : '/updateRecord') ?>">
+				<form class="w3-container w3-card-4 w3-half w3-light-grey" method="post" action="<?php echo site_url('FeaturesController'); echo ($id == '' ? '/insertRecord' : '/updateRecord') ?>">
 					<br>
 					<div>
 						<label class="w3-label" for="name">Name:</label>
@@ -54,7 +54,7 @@ function createForm($txtName = '', $txtDescription = '', $txtPrice = '', $id = '
 		
 		<br>
 		<div class="w3-container w3-padding">
-			 <button class="w3-btn w3-blue w3-col m2" onclick="location.href = '<?php echo site_url("Welcome"); ?>'; ">Back to Features</button>
+			 <button class="w3-btn w3-blue w3-col m2" onclick="location.href = '<?php echo site_url("FeaturesController"); ?>'; ">Back to Features</button>
 		</div>
 	
 	</body>
