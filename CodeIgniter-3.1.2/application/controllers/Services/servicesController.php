@@ -1,7 +1,7 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
 
-class Welcome extends CI_Controller {
+class ServicesController extends CI_Controller {
 
 	/**
 	 * Index Page for this controller.
@@ -20,113 +20,126 @@ class Welcome extends CI_Controller {
 	 */
 	public function index()
 	{
-		$this->load->model('features');
+		$this->load->model('Services/services');
 
 		// Create DB connection
-		$con = $this->features->createDbConnection();
+		$con = $this->services->createDbConnection();
 		
 		// Populate the form
-		$data['allFeatures'] = $this->features->readData($con);
-		$this->features->closeDbConnection($con);
+		$data['allServices'] = $this->services->readData($con);
+		$this->services->closeDbConnection($con);
 
-		$this->load->view('view', $data);
+		$this->load->view('Services/view', $data);
 	}
 
 	public function editRecord($id)
 	{
 		$data['id'] = $id;
 		$data['task'] = 'edit';
+		$data['title'] = 'Update Service';
 
 		$id = $this->test_input($id);
 					
-		$this->load->model('features');
+		$this->load->model('Services/services');
 		// Create DB connection
-		$con = $this->features->createDbConnection();
+		$con = $this->services->createDbConnection();
 		
 		// Populate the form
-		$record = $this->features->getRecord($con, $id);
+		$record = $this->services->getRecord($con, $id);
 
-		$this->features->closeDbConnection($con);
+		$this->services->closeDbConnection($con);
 		
 		if($row = $record->fetch_object()) {
 			$data['txtName'] = $row->name;
-			$data['txtDescription'] = $row->description;
-			$data['txtPrice'] = $row->price;					
+			$data['txtDescription'] = $row->description;							
 		}
 		else {
 			echo "No records found <br>";
 		}
 
-		$this->load->view('addEdit', $data);
+		// Get the features table
+		$data['featuresView'] = $this->getFeaturesTable($id);
+
+		$this->load->view('Services/addEdit', $data);
 	}
 
 	public function addRecord() 
 	{
-		$this->load->view('addEdit');
+		$data['title'] = 'Add new Service';		
+		$this->load->view('Services/addEdit', $data);
 	}
 
 	public function insertRecord()
 	{
-		$this->load->model('features');
+		$this->load->model('Services/services');
 		// Create DB connection
-		$con = $this->features->createDbConnection();
+		$con = $this->services->createDbConnection();
 		
 		$name = $this->input->post('name', true);
-		$description = $this->input->post('description', true);
-		$price  = $this->input->post('price', true);
+		$description = $this->input->post('description', true);		
 		$id = $this->input->post('id', true);
 
-		$result = $this->features->insertData($con, $name, $description, $price);
+		$result = $this->services->insertData($con, $name, $description);
 		
 		// Close DB connection
-		$this->features->closeDbConnection($con);
+		$this->services->closeDbConnection($con);
 		
 		if($result) {
 			// Populate the form
 			$data['task'] = "created";
-			$this->load->view("addEdit", $data);
+			$this->load->view("Services/addEdit", $data);
 			$this->load->view("message", $data);
-		}
-				
+		}				
 	}
 
 	public function updateRecord() 
 	{
-		$this->load->model('features');
+		$this->load->model('Services/services');
 		// Create DB connection
-		$con = $this->features->createDbConnection();
+		$con = $this->services->createDbConnection();
 				
 		$name = $this->input->post('name', true);
-		$description = $this->input->post('description', true);
-		$price  = $this->input->post('price', true);
+		$description = $this->input->post('description', true);		
 		$id = $this->input->post('id', true);
 				
-		$result = $this->features->updateData($con, $name, $description, $price, $id);
-		
+		$result = $this->services->updateData($con, $name, $description, $id);
+
+		// Attach the features to the service
+		$featurelist = $this->input->post('select', true);
+		if ($featurelist != null) {
+			foreach ($featurelist as $key => $value) {			
+				echo $value . "<br>";
+				$result2 = $this->services->attachFeature($con,$id,$value);	
+			}
+		}
+
 		// Close DB connection
-		$this->features->closeDbConnection($con);
-				
+		$this->services->closeDbConnection($con);
+
+		/*echo "<pre>";
+		$dd = $this->input->post(NULL, TRUE);
+		var_dump($dd);
+		echo "</pre>";*/
+
 		if($result) {
 			// Populate the form
 			$data['task'] = "updated";
-			$this->load->view("addEdit", $data);
+			$this->load->view("Services/addEdit", $data);
 			$this->load->view("message", $data);
 		}
 	}
 
 	public function deleteRecord($id)
 	{
-		$this->load->model('features');
-		// Get variables
-		//$id = $this->input->get('id', true);
-						
+		$this->load->model('Services/services');
+								
 		// Create DB connection
-		$con = $this->features->createDbConnection();
+		$con = $this->services->createDbConnection();
 		
-		$result = $this->features->deleteData($con, $id);
+		$result = $this->services->deleteData($con, $id);
 		
 		// Close DB connection
-		$this->features->closeDbConnection($con);
+		$this->services->closeDbConnection($con);
 		
 		if($result) {
 			$data['task'] = "deleted";
@@ -140,16 +153,26 @@ class Welcome extends CI_Controller {
 		$data['task'] = $this->input->get('task', true);
 		$text = $this->input->get('searchText', true);
 
-		$this->load->model('features');
+		$this->load->model('Services/services');
 
 		// Create DB connection
-		$con = $this->features->createDbConnection();
+		$con = $this->services->createDbConnection();
 		
-	 	$data['allFeatures'] = $this->features->search($con, $text);
+	 	$data['allServices'] = $this->services->search($con, $text);
 	 	$data['searchText'] = $text;
-		$this->features->closeDbConnection($con);
+		$this->services->closeDbConnection($con);
 		
-		$this->load->view('view', $data);
+		$this->load->view('Services/view', $data);
+	}
+
+	public function getFeaturesTable($id = '')
+	{
+		$this->load->model('Services/services');
+		$con = $this->services->createDbConnection();
+		$data['serviceFeatures'] = $this->services->getFeaturesOfService($con,$id);
+		$this->services->closeDbConnection($con);
+
+		return $this->load->view('Services/featuresTable', $data, true);
 	}
 
 	// Helper method to filter input data
@@ -173,5 +196,5 @@ class Welcome extends CI_Controller {
 				</script>";
 	}
 }
-
 ?>
+

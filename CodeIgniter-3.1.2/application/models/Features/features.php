@@ -11,7 +11,6 @@ class features extends CI_Model
 		# code...
 	}
 
-
 	public function createDbConnection() {
 		// Create DB connection
 		@ $con = new mysqli("localhost","testuser","password");
@@ -33,9 +32,9 @@ class features extends CI_Model
 		//echo "Connection closed! <br>";
 	}
 
-	public function insertData($connection,$name,$description,$price) {
+	public function insertData($connection,$name,$description,$price,$service_id) {
 		$con = $connection;
-		$insertQuery = "INSERT INTO features (name,description,price) VALUES ('$name','$description',$price)";
+		$insertQuery = "INSERT INTO features (name,description,price,service_id) VALUES ('$name','$description',$price,$service_id)";
 		//$result = $con->query($insertQuery);
 
 		if ($con->query($insertQuery)) {
@@ -47,9 +46,9 @@ class features extends CI_Model
 		}
 	}
 
-	public function updateData($connection,$name,$description,$price,$id) {
+	public function updateData($connection,$name,$description,$price,$service_id,$id) {
 		$con = $connection;
-		$updateQuery = "UPDATE features SET name = '$name', description = '$description', price = $price WHERE id = $id";
+		$updateQuery = "UPDATE features SET name = '$name', description = '$description', price = $price, service_id = $service_id WHERE id = $id";
 		//$result = $con->query($updateQuery);
 		if ($con->query($updateQuery)) {
 			//echo "Record updated successfully <br>";
