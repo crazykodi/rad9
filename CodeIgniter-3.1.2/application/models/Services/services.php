@@ -13,7 +13,10 @@ class services extends CI_Model
 
 	public function createDbConnection() {
 		// Create DB connection
-		@ $con = new mysqli("localhost","testuser","password");
+		$this->load->database();
+		
+		// @ $con = new mysqli("localhost","testuser","password");
+		@ $con = new mysqli($this->db->hostname, $this->db->username, $this->db->password);
 		if($con->connect_error) {
 			 die ("couldn't connect. " . $con->connect_error);
 		} else {
@@ -21,7 +24,7 @@ class services extends CI_Model
 		}
 
 		// Select DB
-		$con->select_db("test");
+		$con->select_db($this->db->database);
 		
 		return $con;
 	}

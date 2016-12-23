@@ -20,7 +20,7 @@ function createForm($txtName = '', $txtDescription = '', $id = '', $title = 'Add
 				</h2>
 			</div>	
 			<div class="w3-container" id="form">
-				<form class="w3-container w3-card-4 w3-half w3-light-grey" method="post" action="<?php echo site_url('Services/servicesController'); echo ($id == '' ? '/insertRecord' : '/updateRecord') ?>">				
+				<form class="w3-container w3-card-4 w3-half w3-light-grey" method="post" action="<?php echo site_url('Services/ServicesController'); echo ($id == '' ? '/insertRecord' : '/updateRecord') ?>">				
 					<br>
 					<div>
 						<label class="w3-label" for="name">Name:</label>
@@ -45,7 +45,7 @@ function createForm($txtName = '', $txtDescription = '', $id = '', $title = 'Add
 		
 		<br>
 		<div class="w3-container w3-padding">
-			 <button class="w3-btn w3-blue w3-col m2" onclick="location.href = '<?php echo site_url("Services/servicesController"); ?>'; ">Back to Services</button>
+			 <button class="w3-btn w3-blue w3-col m2" onclick="location.href = '<?php echo site_url("Services/ServicesController"); ?>'; ">Back to Services</button>
 		</div>
 	
 	</body>

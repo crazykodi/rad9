@@ -20,16 +20,16 @@ class ServicesController extends CI_Controller {
 	 */
 	public function index()
 	{
-		$this->load->model('Services/services');
+		$this->load->model('Services/Services');
 
 		// Create DB connection
-		$con = $this->services->createDbConnection();
+		$con = $this->Services->createDbConnection();
 		
 		// Populate the form
-		$data['allServices'] = $this->services->readData($con);
-		$this->services->closeDbConnection($con);
+		$data['allServices'] = $this->Services->readData($con);
+		$this->Services->closeDbConnection($con);
 
-		$this->load->view('Services/view', $data);
+		$this->load->view('Services/View', $data);
 	}
 
 	public function editRecord($id)
@@ -40,14 +40,14 @@ class ServicesController extends CI_Controller {
 
 		$id = $this->test_input($id);
 					
-		$this->load->model('Services/services');
+		$this->load->model('Services/Services');
 		// Create DB connection
-		$con = $this->services->createDbConnection();
+		$con = $this->Services->createDbConnection();
 		
 		// Populate the form
-		$record = $this->services->getRecord($con, $id);
+		$record = $this->Services->getRecord($con, $id);
 
-		$this->services->closeDbConnection($con);
+		$this->Services->closeDbConnection($con);
 		
 		if($row = $record->fetch_object()) {
 			$data['txtName'] = $row->name;
@@ -60,61 +60,61 @@ class ServicesController extends CI_Controller {
 		// Get the features table
 		$data['featuresView'] = $this->getFeaturesTable($id);
 
-		$this->load->view('Services/addEdit', $data);
+		$this->load->view('Services/AddEdit', $data);
 	}
 
 	public function addRecord() 
 	{
 		$data['title'] = 'Add new Service';		
-		$this->load->view('Services/addEdit', $data);
+		$this->load->view('Services/AddEdit', $data);
 	}
 
 	public function insertRecord()
 	{
-		$this->load->model('Services/services');
+		$this->load->model('Services/Services');
 		// Create DB connection
-		$con = $this->services->createDbConnection();
+		$con = $this->Services->createDbConnection();
 		
 		$name = $this->input->post('name', true);
 		$description = $this->input->post('description', true);		
 		$id = $this->input->post('id', true);
 
-		$result = $this->services->insertData($con, $name, $description);
+		$result = $this->Services->insertData($con, $name, $description);
 		
 		// Close DB connection
-		$this->services->closeDbConnection($con);
+		$this->Services->closeDbConnection($con);
 		
 		if($result) {
 			// Populate the form
 			$data['task'] = "created";
-			$this->load->view("Services/addEdit", $data);
+			$this->load->view("Services/AddEdit", $data);
 			$this->load->view("message", $data);
 		}				
 	}
 
 	public function updateRecord() 
 	{
-		$this->load->model('Services/services');
+		$this->load->model('Services/Services');
 		// Create DB connection
-		$con = $this->services->createDbConnection();
+		$con = $this->Services->createDbConnection();
 				
 		$name = $this->input->post('name', true);
 		$description = $this->input->post('description', true);		
 		$id = $this->input->post('id', true);
 				
-		$result = $this->services->updateData($con, $name, $description, $id);
+		$result = $this->Services->updateData($con, $name, $description, $id);
 
 		// Attach the features to the service
 		$featurelist = $this->input->post('select', true);
 		if ($featurelist != null) {
 			foreach ($featurelist as $key => $value) {			
 				echo $value . "<br>";
-				$result2 = $this->services->attachFeature($con,$id,$value);	
+				$result2 = $this->Services->attachFeature($con,$id,$value);	
 			}
 		}
 
 		// Close DB connection
-		$this->services->closeDbConnection($con);
+		$this->Services->closeDbConnection($con);
 
 		/*echo "<pre>";
 		$dd = $this->input->post(NULL, TRUE);
@@ -124,22 +124,22 @@ class ServicesController extends CI_Controller {
 		if($result) {
 			// Populate the form
 			$data['task'] = "updated";
-			$this->load->view("Services/addEdit", $data);
+			$this->load->view("Services/AddEdit", $data);
 			$this->load->view("message", $data);
 		}
 	}
 
 	public function deleteRecord($id)
 	{
-		$this->load->model('Services/services');
+		$this->load->model('Services/Services');
 								
 		// Create DB connection
-		$con = $this->services->createDbConnection();
+		$con = $this->Services->createDbConnection();
 		
-		$result = $this->services->deleteData($con, $id);
+		$result = $this->Services->deleteData($con, $id);
 		
 		// Close DB connection
-		$this->services->closeDbConnection($con);
+		$this->Services->closeDbConnection($con);
 		
 		if($result) {
 			$data['task'] = "deleted";
@@ -153,26 +153,26 @@ class ServicesController extends CI_Controller {
 		$data['task'] = $this->input->get('task', true);
 		$text = $this->input->get('searchText', true);
 
-		$this->load->model('Services/services');
+		$this->load->model('Services/Services');
 
 		// Create DB connection
-		$con = $this->services->createDbConnection();
+		$con = $this->Services->createDbConnection();
 		
-	 	$data['allServices'] = $this->services->search($con, $text);
+	 	$data['allServices'] = $this->Services->search($con, $text);
 	 	$data['searchText'] = $text;
-		$this->services->closeDbConnection($con);
+		$this->Services->closeDbConnection($con);
 		
-		$this->load->view('Services/view', $data);
+		$this->load->view('Services/View', $data);
 	}
 
 	public function getFeaturesTable($id = '')
 	{
-		$this->load->model('Services/services');
-		$con = $this->services->createDbConnection();
-		$data['serviceFeatures'] = $this->services->getFeaturesOfService($con,$id);
-		$this->services->closeDbConnection($con);
+		$this->load->model('Services/Services');
+		$con = $this->Services->createDbConnection();
+		$data['serviceFeatures'] = $this->Services->getFeaturesOfService($con,$id);
+		$this->Services->closeDbConnection($con);
 
-		return $this->load->view('Services/featuresTable', $data, true);
+		return $this->load->view('Services/FeaturesTable', $data, true);
 	}
 
 	// Helper method to filter input data
