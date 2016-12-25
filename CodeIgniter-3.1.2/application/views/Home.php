@@ -14,6 +14,7 @@
 		<div class="w3-display-middle">
 			<button class="w3-btn w3-blue w3-padding" name="services" onclick="location.href = '<?php echo site_url("Services/ServicesController"); ?>'; ">Services</button>
 			<button class="w3-btn w3-blue w3-padding" name="features" onclick="location.href = '<?php echo site_url("Features/FeaturesController"); ?>'; ">Features</button>
+			<button class="w3-btn w3-blue w3-padding" name="features" onclick="location.href = '<?php echo site_url("Packages/PackagesController"); ?>'; ">Packages</button>
 		</div>
 	</div>	
 </body>
